@@ -1,4 +1,4 @@
-
+```groovy
 pipeline {
     agent any
 
@@ -49,7 +49,8 @@ pipeline {
                                 $ready = $true
                                 break
                             }
-                        } catch {
+                        }
+                        catch {
                             Start-Sleep -Seconds 2
                         }
                     }
@@ -63,35 +64,37 @@ pipeline {
             }
         }
 
-stage('Push Docker Image') {
-    steps {
-        withCredentials([
-            usernamePassword(
-                credentialsId: 'dockerhub',
-                usernameVariable: 'DH_USER',
-                passwordVariable: 'DH_TOKEN'
-            )
-        ]) {
-            bat '''
-                docker login -u "%DH_USER%" -p "%DH_TOKEN%" 
-                if errorlevel 1 exit /b 1
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub',
+                        usernameVariable: 'DH_USER',
+                        passwordVariable: 'DH_TOKEN'
+                    )
+                ]) {
+                    bat '''
+                        docker login -u "%DH_USER%" -p "%DH_TOKEN%"
+                        if errorlevel 1 exit /b 1
 
-                docker push %IMAGE_NAME%:%BUILD_NUMBER%
-                if errorlevel 1 exit /b 1
+                        docker push %IMAGE_NAME%:%BUILD_NUMBER%
+                        if errorlevel 1 exit /b 1
 
-                docker tag %IMAGE_NAME%:%BUILD_NUMBER% %IMAGE_NAME%:latest
-                docker push %IMAGE_NAME%:latest
-                if errorlevel 1 exit /b 1
-            '''
+                        docker tag %IMAGE_NAME%:%BUILD_NUMBER% %IMAGE_NAME%:latest
+                        if errorlevel 1 exit /b 1
+
+                        docker push %IMAGE_NAME%:latest
+                        if errorlevel 1 exit /b 1
+                    '''
+                }
+            }
         }
-    }
-}
 
         stage('Deploy to Kubernetes') {
             steps {
                 withCredentials([
                     file(
-                        credentialsId: 'kubeconfig',
+                        credentialsId: 'kuberconfig',
                         variable: 'KUBECONFIG_FILE'
                     )
                 ]) {
@@ -114,14 +117,19 @@ stage('Push Docker Image') {
             steps {
                 withCredentials([
                     file(
-                        credentialsId: 'kubeconfig',
+                        credentialsId: 'kuberconfig',
                         variable: 'KUBECONFIG_FILE'
                     )
                 ]) {
                     bat '''
                         kubectl --kubeconfig="%KUBECONFIG_FILE%" get deployment %DEPLOYMENT_NAME%
+                        if errorlevel 1 exit /b 1
+
                         kubectl --kubeconfig="%KUBECONFIG_FILE%" get pods -l app=university-lms
+                        if errorlevel 1 exit /b 1
+
                         kubectl --kubeconfig="%KUBECONFIG_FILE%" get service %SERVICE_NAME%
+                        if errorlevel 1 exit /b 1
                     '''
 
                     powershell '''
@@ -138,7 +146,8 @@ stage('Push Docker Image') {
                                     $ready = $true
                                     break
                                 }
-                            } catch {
+                            }
+                            catch {
                                 Start-Sleep -Seconds 3
                             }
                         }
@@ -172,7 +181,7 @@ stage('Push Docker Image') {
                 if (env.DEPLOY_ATTEMPTED == 'true') {
                     withCredentials([
                         file(
-                            credentialsId: 'kubeconfig',
+                            credentialsId: 'kuberconfig',
                             variable: 'KUBECONFIG_FILE'
                         )
                     ]) {
@@ -181,12 +190,15 @@ stage('Push Docker Image') {
                             if errorlevel 1 exit /b 1
 
                             kubectl --kubeconfig="%KUBECONFIG_FILE%" rollout status deployment/%DEPLOYMENT_NAME% --timeout=180s
+                            if errorlevel 1 exit /b 1
                         '''
                     }
-                } else {
+                }
+                else {
                     echo 'Deployment was not started; rollback not required.'
                 }
             }
         }
     }
 }
+```
