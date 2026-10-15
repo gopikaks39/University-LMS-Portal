@@ -1,4 +1,4 @@
-```groovy
+
 pipeline {
     agent any
 
@@ -33,6 +33,7 @@ pipeline {
                 bat '''
                     docker rm -f lms-test-%BUILD_NUMBER% 2>NUL
                     docker run -d --name lms-test-%BUILD_NUMBER% -p 18080:80 %IMAGE_NAME%:%BUILD_NUMBER%
+                    if errorlevel 1 exit /b 1
                 '''
 
                 powershell '''
@@ -40,10 +41,7 @@ pipeline {
 
                     for ($i = 0; $i -lt 15; $i++) {
                         try {
-                            $response = Invoke-WebRequest `
-                                -Uri "http://localhost:18080/" `
-                                -TimeoutSec 3 `
-                                -UseBasicParsing
+                            $response = Invoke-WebRequest -Uri "http://localhost:18080/" -TimeoutSec 3 -UseBasicParsing
 
                             if ($response.StatusCode -eq 200) {
                                 $ready = $true
@@ -137,10 +135,7 @@ pipeline {
 
                         for ($i = 0; $i -lt 10; $i++) {
                             try {
-                                $response = Invoke-WebRequest `
-                                    -Uri "http://localhost:30011/" `
-                                    -TimeoutSec 5 `
-                                    -UseBasicParsing
+                                $response = Invoke-WebRequest -Uri "http://localhost:30011/" -TimeoutSec 5 -UseBasicParsing
 
                                 if ($response.StatusCode -eq 200) {
                                     $ready = $true
@@ -165,9 +160,7 @@ pipeline {
 
     post {
         always {
-            script {
-                bat 'docker rm -f lms-test-%BUILD_NUMBER% 2>NUL'
-            }
+            bat 'docker rm -f lms-test-%BUILD_NUMBER% 2>NUL'
         }
 
         success {
@@ -193,12 +186,10 @@ pipeline {
                             if errorlevel 1 exit /b 1
                         '''
                     }
-                }
-                else {
+                } else {
                     echo 'Deployment was not started; rollback not required.'
                 }
             }
         }
     }
 }
-```
