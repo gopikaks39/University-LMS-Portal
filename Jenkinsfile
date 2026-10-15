@@ -33,19 +33,21 @@ pipeline {
             }
         }
 
-        stage('Push Image') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-credentials',
-                    usernameVariable: 'DH_USER',
-                    passwordVariable: 'DH_TOKEN'
-                )]) {
-                    bat 'docker login -u "%DH_USER%" --password-stdin <<< "%DH_TOKEN%"'
-                    bat 'docker push %IMAGE%:%BUILD_NUMBER%'
-                    bat 'docker push %IMAGE%:latest'
-                }
-            }
+
+stage('Push Image') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'dockerhub-credentials',
+            usernameVariable: 'DH_USER',
+            passwordVariable: 'DH_TOKEN'
+        )]) {
+            bat 'echo %DH_TOKEN%| docker login -u "%DH_USER%" --password-stdin'
+            bat 'docker push %IMAGE%:%BUILD_NUMBER%'
+            bat 'docker push %IMAGE%:latest'
         }
+    }
+}
+
 
         stage('Deploy to Kubernetes') {
             steps {
