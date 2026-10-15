@@ -63,33 +63,29 @@ pipeline {
             }
         }
 
-        stage('Push Docker Image') {
-            steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'dockerhub',
-                        usernameVariable: 'DH_USER',
-                        passwordVariable: 'DH_TOKEN'
-                    )
-                ]) {
-                    powershell '''
-                        $env:DH_TOKEN |
-                            docker login -u $env:DH_USER --password-stdin
+stage('Push Docker Image') {
+    steps {
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'dockerhub',
+                usernameVariable: 'DH_USER',
+                passwordVariable: 'DH_TOKEN'
+            )
+        ]) {
+            bat '''
+                docker login -u "%DH_USER%" -p "%DH_TOKEN%" 
+                if errorlevel 1 exit /b 1
 
-                        if ($LASTEXITCODE -ne 0) {
-                            throw "Docker Hub login failed."
-                        }
-                    '''
+                docker push %IMAGE_NAME%:%BUILD_NUMBER%
+                if errorlevel 1 exit /b 1
 
-                    bat 'docker push %IMAGE_NAME%:%BUILD_NUMBER%'
-
-                    bat '''
-                        docker tag %IMAGE_NAME%:%BUILD_NUMBER% %IMAGE_NAME%:latest
-                        docker push %IMAGE_NAME%:latest
-                    '''
-                }
-            }
+                docker tag %IMAGE_NAME%:%BUILD_NUMBER% %IMAGE_NAME%:latest
+                docker push %IMAGE_NAME%:latest
+                if errorlevel 1 exit /b 1
+            '''
         }
+    }
+}
 
         stage('Deploy to Kubernetes') {
             steps {
