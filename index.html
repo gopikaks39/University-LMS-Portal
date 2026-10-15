@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>University Learning Portal</title>
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+header {
+    background: #123c69;
+    color: white;
+    padding: 25px;
+    text-align: center;
+}
+nav {
+    background: #0b2545;
+    padding: 14px;
+    text-align: center;
+}
+nav a {
+    color: white;
+    margin: 12px;
+    text-decoration: none;
+}
+main {
+    padding: 25px;
+    max-width: 1100px;
+    margin: auto;
+}
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+}
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px #cbd5e1;
+}
+h2 {
+    color: #123c69;
+}
+footer {
+    background: #123c69;
+    color: white;
+    text-align: center;
+    padding: 15px;
+}
+</style>
+</head>
+<body>
+<header>
+    <h1>University Learning Management Portal</h1>
+    <p>Learn • Explore • Achieve</p>
+</header>
+
+<nav>
+    <a href="#courses">Courses</a>
+    <a href="#faculty">Faculty</a>
+    <a href="#resources">Resources</a>
+    <a href="#assignments">Assignments</a>
+    <a href="#exams">Examinations</a>
+</nav>
+
+<main>
+<section id="courses">
+    <h2>Available Courses</h2>
+    <div class="cards">
+        <div class="card">
+            <h3>Computer Networks</h3>
+            <p>Learn network protocols and communication.</p>
+        </div>
+        <div class="card">
+            <h3>Software Engineering</h3>
+            <p>Study software design and development.</p>
+        </div>
+        <div class="card">
+            <h3>Database Management</h3>
+            <p>Learn SQL and database systems.</p>
+        </div>
+    </div>
+</section>
+
+<section id="faculty">
+    <h2>Faculty Profiles</h2>
+    <div class="cards">
+        <div class="card">
+            <h3>Dr. Ananya Sharma</h3>
+            <p>Computer Networks</p>
+        </div>
+        <div class="card">
+            <h3>Prof. Rahul Verma</h3>
+            <p>Software Engineering</p>
+        </div>
+    </div>
+</section>
+
+<section id="resources">
+    <h2>Learning Resources</h2>
+    <div class="card">
+        <p>Lecture notes, reference books, tutorials and lab materials.</p>
+    </div>
+</section>
+
+<section id="assignments">
+    <h2>Assignment Announcements</h2>
+    <div class="card">
+        <p>Software Engineering assignment submission: 25 October.</p>
+        <p>Database lab assignment submission: 28 October.</p>
+    </div>
+</section>
+
+<section id="exams">
+    <h2>Examination Schedule</h2>
+    <div class="card">
+        <p>Computer Networks — 5 November</p>
+        <p>Software Engineering — 8 November</p>
+        <p>Database Management — 12 November</p>
+    </div>
+</section>
+</main>
+
+<footer>
+    University Learning Portal | DevOps Assessment VIII
+</footer>
+</body>
+</html>
