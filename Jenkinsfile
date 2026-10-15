@@ -19,7 +19,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
-                bat 'dir'
             }
         }
 
@@ -50,26 +49,25 @@ pipeline {
                                 $ready = $true
                                 break
                             }
-                        }
-                        catch {
+                        } catch {
                             Start-Sleep -Seconds 2
                         }
                     }
 
                     if (-not $ready) {
-                        throw "Website health check failed."
+                        throw "Website test failed."
                     }
 
-                    Write-Host "Website health check passed."
+                    Write-Host "Website test passed."
                 '''
             }
         }
 
-        stage('Push Versioned Image') {
+        stage('Push Docker Image') {
             steps {
                 withCredentials([
                     usernamePassword(
-                        credentialsId: 'dockerhub-credentials',
+                        credentialsId: 'dockerhub',
                         usernameVariable: 'DH_USER',
                         passwordVariable: 'DH_TOKEN'
                     )
@@ -107,11 +105,9 @@ pipeline {
 
                     bat '''
                         kubectl --kubeconfig="%KUBECONFIG_FILE%" set image deployment/%DEPLOYMENT_NAME% %CONTAINER_NAME%=%IMAGE_NAME%:%BUILD_NUMBER%
-
                         if errorlevel 1 exit /b 1
 
                         kubectl --kubeconfig="%KUBECONFIG_FILE%" rollout status deployment/%DEPLOYMENT_NAME% --timeout=180s
-
                         if errorlevel 1 exit /b 1
                     '''
                 }
@@ -146,8 +142,7 @@ pipeline {
                                     $ready = $true
                                     break
                                 }
-                            }
-                            catch {
+                            } catch {
                                 Start-Sleep -Seconds 3
                             }
                         }
@@ -156,7 +151,7 @@ pipeline {
                             throw "Deployed website health check failed."
                         }
 
-                        Write-Host "Kubernetes website health check passed."
+                        Write-Host "Kubernetes health check passed."
                     '''
                 }
             }
@@ -165,16 +160,17 @@ pipeline {
 
     post {
         always {
-            bat 'docker rm -f lms-test-%BUILD_NUMBER% 2>NUL || exit /b 0'
+            script {
+                bat 'docker rm -f lms-test-%BUILD_NUMBER% 2>NUL'
+            }
         }
 
         success {
             echo 'University LMS pipeline completed successfully.'
-            echo 'The versioned Docker image has been deployed and verified.'
         }
 
         failure {
-            echo 'Pipeline failed. Checking whether a deployment rollback is required.'
+            echo 'Pipeline failed. Attempting rollback if deployment was started.'
 
             script {
                 if (env.DEPLOY_ATTEMPTED == 'true') {
@@ -186,16 +182,13 @@ pipeline {
                     ]) {
                         bat '''
                             kubectl --kubeconfig="%KUBECONFIG_FILE%" rollout undo deployment/%DEPLOYMENT_NAME%
-
                             if errorlevel 1 exit /b 1
 
                             kubectl --kubeconfig="%KUBECONFIG_FILE%" rollout status deployment/%DEPLOYMENT_NAME% --timeout=180s
                         '''
                     }
-
-                    echo 'Rollback command executed. Check rollout status to confirm recovery.'
                 } else {
-                    echo 'Deployment was not attempted; no Kubernetes rollback was run.'
+                    echo 'Deployment was not started; rollback not required.'
                 }
             }
         }
