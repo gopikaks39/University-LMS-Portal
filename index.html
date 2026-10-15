@@ -4,36 +4,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>University Learning Portal</title>
+<title>University Learning Management Portal</title>
 <style>
+* { box-sizing: border-box; }
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f1f5f9;
-    color: #1e293b;
+    background: #f3f6fb;
+    color: #26344a;
 }
 header {
-    background: #123c69;
+    background: #173b70;
     color: white;
-    padding: 25px;
-    text-align: center;
+    padding: 24px 7%;
 }
-nav {
-    background: #0b2545;
-    padding: 14px;
-    text-align: center;
-}
+header h1 { margin: 0 0 8px; }
+nav { margin-top: 18px; }
 nav a {
     color: white;
-    margin: 12px;
     text-decoration: none;
+    margin-right: 20px;
 }
-main {
-    padding: 25px;
-    max-width: 1100px;
-    margin: auto;
+main { padding: 25px 7%; }
+.welcome {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 22px;
 }
-.cards {
+.grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 18px;
@@ -42,93 +41,91 @@ main {
     background: white;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 8px #cbd5e1;
+    border-top: 4px solid #2f70c0;
 }
-h2 {
-    color: #123c69;
-}
+.card h3 { color: #173b70; margin-top: 0; }
+li { margin-bottom: 10px; }
 footer {
-    background: #123c69;
-    color: white;
     text-align: center;
-    padding: 15px;
+    padding: 20px;
+    background: #173b70;
+    color: white;
+    margin-top: 25px;
 }
 </style>
 </head>
 <body>
 <header>
     <h1>University Learning Management Portal</h1>
-    <p>Learn • Explore • Achieve</p>
+    <p>Learn, collaborate and achieve academic excellence.</p>
+    <nav>
+        <a href="#courses">Courses</a>
+        <a href="#faculty">Faculty</a>
+        <a href="#resources">Resources</a>
+        <a href="#assignments">Assignments</a>
+        <a href="#exams">Examinations</a>
+    </nav>
 </header>
 
-<nav>
-    <a href="#courses">Courses</a>
-    <a href="#faculty">Faculty</a>
-    <a href="#resources">Resources</a>
-    <a href="#assignments">Assignments</a>
-    <a href="#exams">Examinations</a>
-</nav>
-
 <main>
-<section id="courses">
-    <h2>Available Courses</h2>
-    <div class="cards">
-        <div class="card">
-            <h3>Computer Networks</h3>
-            <p>Learn network protocols and communication.</p>
-        </div>
-        <div class="card">
-            <h3>Software Engineering</h3>
-            <p>Study software design and development.</p>
-        </div>
-        <div class="card">
-            <h3>Database Management</h3>
-            <p>Learn SQL and database systems.</p>
-        </div>
-    </div>
-</section>
+    <section class="welcome">
+        <h2>Welcome to the Learning Portal</h2>
+        <p>Access your courses, meet faculty members, explore learning resources
+        and stay updated with academic announcements.</p>
+    </section>
 
-<section id="faculty">
-    <h2>Faculty Profiles</h2>
-    <div class="cards">
-        <div class="card">
-            <h3>Dr. Ananya Sharma</h3>
-            <p>Computer Networks</p>
-        </div>
-        <div class="card">
-            <h3>Prof. Rahul Verma</h3>
-            <p>Software Engineering</p>
-        </div>
-    </div>
-</section>
+    <div class="grid">
+        <section class="card" id="courses">
+            <h3>Available Courses</h3>
+            <ul>
+                <li>Data Structures and Algorithms</li>
+                <li>Database Management Systems</li>
+                <li>Computer Networks</li>
+                <li>Software Engineering</li>
+            </ul>
+        </section>
 
-<section id="resources">
-    <h2>Learning Resources</h2>
-    <div class="card">
-        <p>Lecture notes, reference books, tutorials and lab materials.</p>
-    </div>
-</section>
+        <section class="card" id="faculty">
+            <h3>Faculty Profiles</h3>
+            <p><strong>Dr. Ananya Sharma</strong><br>Computer Science</p>
+            <p><strong>Prof. Rahul Verma</strong><br>Database Systems</p>
+            <p><strong>Dr. Priya Nair</strong><br>Software Engineering</p>
+        </section>
 
-<section id="assignments">
-    <h2>Assignment Announcements</h2>
-    <div class="card">
-        <p>Software Engineering assignment submission: 25 October.</p>
-        <p>Database lab assignment submission: 28 October.</p>
-    </div>
-</section>
+        <section class="card" id="resources">
+            <h3>Learning Resources</h3>
+            <ul>
+                <li>Lecture notes and presentations</li>
+                <li>Programming practice materials</li>
+                <li>Reference books and tutorials</li>
+                <li>Previous examination papers</li>
+            </ul>
+        </section>
 
-<section id="exams">
-    <h2>Examination Schedule</h2>
-    <div class="card">
-        <p>Computer Networks — 5 November</p>
-        <p>Software Engineering — 8 November</p>
-        <p>Database Management — 12 November</p>
+        <section class="card" id="assignments">
+            <h3>Assignment Announcements</h3>
+            <p>Data Structures: Submit Assignment 3 by 25 October.</p>
+            <p>DBMS: Complete SQL exercises by 28 October.</p>
+        </section>
+
+        <section class="card" id="exams">
+            <h3>Examination Schedule</h3>
+            <p>Computer Networks — 2 November</p>
+            <p>Database Systems — 5 November</p>
+            <p>Software Engineering — 8 November</p>
+        </section>
+
+        <section class="card">
+            <h3>Portal Information</h3>
+            <p>Access academic information and course announcements
+            from one convenient location.</p>
+            <p><strong>Academic Session:</strong> 2026–27</p>
+        </section>
     </div>
-</section>
 </main>
 
 <footer>
-    University Learning Portal | DevOps Assessment VIII
+    University Learning Management Portal | Academic Session 2026–27
 </footer>
 </body>
 </html>
